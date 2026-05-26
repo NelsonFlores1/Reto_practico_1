@@ -37,7 +37,8 @@ jobs:
               run: |
                 cd tests
                 npm install
-                npx playwright install --with-deps
+                npm install --save-dev wait-on
+                npm exec playwright install --with-deps
 
             - name: 6. Lanzar Aplicación y Consumidor en Segundo Plano
               run: |
@@ -60,4 +61,4 @@ jobs:
             - name: 10. Ejecutar Script de prueba en modo HEadless
               run: |
                 cd tests
-                npx playwright test registro-async.spec.js
+                npm exec playwright test registro-async.spec.js
