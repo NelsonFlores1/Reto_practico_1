@@ -2,17 +2,17 @@ name: Lite Thinking QA TestOps Pipeline
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
   run-automation-suite:
-    name: Ejecución de Pruebas y Reporte
+    name: Ejecucion de Pruebas y Reporte
     runs-on: ubuntu-latest
 
     steps:
-      - name: 1. Descargar Código del Repositorio
+      - name: 1. Descargar Codigo del Repositorio
         uses: actions/checkout@v4
 
       - name: 2. Configurar Entorno Node.js
@@ -22,30 +22,56 @@ jobs:
 
       - name: 3. Levantar Infraestructura de Kafka (Docker)
         run: |
-          docker-compose -f docker-compose.yml up -d
-          echo "Esperando que Kafka-Broker esté completamente inicializado..."
+          docker compose up -d
+          echo "Esperando que Kafka-Broker este completamente inicializado..."
           sleep 15
 
-      - name: 4. Instalar Dependencias de la Aplicación
+      - name: 4. Instalar Dependencias de la Aplicacion
         run: |
-          cd app
+          cd backend
+          npm install
+          cd ../frontend
           npm install
 
       - name: 5. Instalar Dependencias de Pruebas (Playwright)
         run: |
           cd tests
           npm install
-          npx playwright install --with-deps
+          npm install --save-dev wait-on @playwright/test
+          node ./node_modules/playwright/cli.js install --with-deps
 
-      - name: 6. Lanzar Aplicación y Consumidor en Segundo Plano
+      - name: 6. Lanzar Backend y Worker en Segundo Plano
         run: |
-          cd app
-          node server.js &
-          node worker.js &
-          sleep 5
+          cd backend
+          nohup node server.js > ../backend.log 2>&1 &
+          nohup node worker.js > ../worker.log 2>&1 &
 
-
-      - name: 8. Ejecutar Script de prueba en modo Headless
+      - name: 7. Esperar Backend listo
         run: |
           cd tests
-          npx playwright test registro-async.spec.js
+          npx wait-on http://127.0.0.1:3000 --timeout 120000
+
+      - name: 8. Lanzar Frontend en Segundo Plano
+        run: |
+          cd frontend
+          nohup npm run dev -- --host 0.0.0.0 --port 5173 > ../frontend.log 2>&1 &
+
+      - name: 9. Esperar Frontend listo
+        run: |
+          cd tests
+          npx wait-on http://127.0.0.1:5173 --timeout 120000
+
+      - name: 10. Ejecutar Script de prueba en modo Headless
+        run: |
+          cd tests
+          node ./node_modules/playwright/cli.js test ./registro-async.spec.js
+
+      - name: 11. Mostrar logs (debug)
+        if: always()
+        run: |
+          echo "=== backend.log ==="
+          cat backend.log || true
+          echo "=== worker.log ==="
+          cat worker.log || true
+          echo "=== frontend.log ==="
+          cat frontend.log || true
