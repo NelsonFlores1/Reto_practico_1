@@ -55,9 +55,9 @@ jobs:
             - name: 9. Esperar Frontend listo
               run: |
                 cd tests
-                npx wait-on http://127.0.0.1:5173
+                npx wait-on http://127.0.0.1:5173 --timeout 60000
 
-            - name: 10. Ejecutar Script de prueba en modo HEadless
+            - name: 10. Ejecutar Script de prueba en modo Headless
               run: |
                 cd tests
                 node ./node_modules/playwright/cli.js test registro-async.spec.js
