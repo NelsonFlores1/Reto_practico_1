@@ -1,58 +1,51 @@
-name: Reto 1 - Lite Thinking QA
+name: Lite Thinking QA TestOps Pipeline
 
 on:
-    push:
-        branches: [ main, master ]
-    pull_request:
-        branches: [ main, master ]
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
-    run-automation-suite:
-        name: Ejecución de Pruebas y Reporte
-        runs-on: ubuntu-latest
+  run-automation-suite:
+    name: Ejecución de Pruebas y Reporte
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: 1. Descargar Código del Repositorio
-              uses: actions/checkout@v4
+    steps:
+      - name: 1. Descargar Código del Repositorio
+        uses: actions/checkout@v4
 
-            - name: 2. Configurar Entorno Node.js
-              uses: actions/setup-node@v4
-              with:
-                node-version: 20
+      - name: 2. Configurar Entorno Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-            - name: 3. Levantar Infraestructura de Kafka (Docker)
-              run: |
-                docker compose up -d
-                echo "Esperando que Kafka-Broker esté completamente inicializado..."
-                sleep 15
+      - name: 3. Levantar Infraestructura de Kafka (Docker)
+        run: |
+          docker-compose -f docker-compose.yml up -d
+          echo "Esperando que Kafka-Broker esté completamente inicializado..."
+          sleep 15
 
-            - name: 4. Instalar Dependencias de la Aplicación
-              run: |
-                cd backend
-                npm install
-                cd ../frontend
-                npm install
+      - name: 4. Instalar Dependencias de la Aplicación
+        run: |
+          cd app
+          npm install
 
-            - name: 5. Instalar Dependencias de Pruebas (Playwright)
-              run: |
-                cd tests
-                npm install
-                node ./node_modules/playwright/cli.js install --with-deps
+      - name: 5. Instalar Dependencias de Pruebas (Playwright)
+        run: |
+          cd tests
+          npm install
+          npx playwright install --with-deps
 
-            - name: 6. Lanzar Aplicación y Consumidor en Segundo Plano
-              run: |
-                cd backend
-                node server.js &
-                node worker.js &
-                sleep 5
+      - name: 6. Lanzar Aplicación y Consumidor en Segundo Plano
+        run: |
+          cd app
+          node server.js &
+          node worker.js &
+          sleep 5
 
-            - name: 7. Lanzar frontend en Segundo Plano
-              run: |
-                cd frontend
-                npm run dev -- --host 0.0.0.0 --port 5173 &
-                sleep 8
 
-            - name: 10. Ejecutar Script de prueba en modo Headless
-              run: |
-                cd tests
-                node ./node_modules/playwright/cli.js test registro-async.spec.js
+      - name: 8. Ejecutar Script de prueba en modo Headless
+        run: |
+          cd tests
+          npx playwright test registro-async.spec.js
