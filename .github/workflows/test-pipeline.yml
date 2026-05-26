@@ -52,11 +52,6 @@ jobs:
                 npm run dev -- --host 0.0.0.0 --port 5173 &
                 sleep 8
 
-            - name: 9. Esperar Frontend listo
-              run: |
-                cd tests
-                npx wait-on http://127.0.0.1:5173 --timeout 60000
-
             - name: 10. Ejecutar Script de prueba en modo Headless
               run: |
                 cd tests
