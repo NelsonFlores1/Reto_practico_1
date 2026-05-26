@@ -23,7 +23,7 @@ export default function App() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         // body: JSON.stringify({ target, amount })
-        body: JSON.stringify({ target, amount, simulationProfile: 'FAST_5' }) // para que se apruebe a los 5 seg.]
+        body: JSON.stringify({ target, amount, simulationProfile: 'FAST_5' }) // para que se apruebe a los 5 seg.
       });
 
       if (!response.ok) {
