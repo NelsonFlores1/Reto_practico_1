@@ -18,7 +18,7 @@ jobs:
       - name: 2. Configurar Entorno Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: 3. Levantar Infraestructura de Kafka (Docker)
         run: |
@@ -26,57 +26,48 @@ jobs:
           echo "Esperando que Kafka-Broker este completamente inicializado..."
           sleep 15
 
-      - name: 4. Instalar Dependencias de la Aplicacion
+      - name: 4. Instalar Dependencias Backend
         run: |
           cd backend
-          npm install
-          cd ../frontend
           npm ci
 
-      - name: 5. Instalar Dependencias de Pruebas (Playwright)
+      - name: 5. Instalar Dependencias Frontend
+        run: |
+          cd frontend
+          npm ci
+
+      - name: 6. Instalar Dependencias de Pruebas (Playwright)
         run: |
           cd tests
-          npm install
+          npm ci
           npm install --save-dev wait-on @playwright/test
           node ./node_modules/playwright/cli.js install --with-deps
 
-      - name: 6. Lanzar Backend y Worker en Segundo Plano
+      - name: 7. Lanzar Backend y Worker en Segundo Plano
         run: |
           cd backend
           nohup node server.js > ../backend.log 2>&1 &
           nohup node worker.js > ../worker.log 2>&1 &
 
-      - name: 7. Esperar Backend listo
+      - name: 8. Esperar Backend listo
         run: |
           cd tests
-          npx wait-on http://127.0.0.1:3000 --timeout 120000
+          npx wait-on tcp:127.0.0.1:3000 --timeout 120000
 
-      - name: 8. Lanzar Frontend en Segundo Plano
-        run: |
-          cd frontend
-          nohup npm run dev -- --host 0.0.0.0 --port 5173 > ../frontend.log 2>&1 &
-          sleep 5
-      
-      - name: 8.1 Ver log frontend
-        run: |
-          cat frontend.log || true
+      # - name: 9. Lanzar Frontend en Segundo Plano
+      #   run: |
+      #     cd frontend
+      #     nohup npm run dev -- --host 0.0.0.0 --port 5173 > ../frontend.log 2>&1 &
+      #     sleep 5
+      #     ps -ef | grep -E "vite|node" || true
+      #     cat ../frontend.log || true
 
-      - name: 9. Esperar Frontend listo
-        run: |
-          cd tests
-          npx wait-on http://127.0.0.1:5173 --timeout 120000
+      # - name: 10. Esperar Frontend listo
+      #   run: |
+      #     cd tests
+      #     npx wait-on tcp:127.0.0.1:5173 --timeout 120000
 
-      - name: 10. Ejecutar Script de prueba en modo Headless
+      - name: 11. Ejecutar Script de prueba en modo Headless
         run: |
           cd tests
           node ./node_modules/playwright/cli.js test ./registro-async.spec.js
-
-      - name: 11. Mostrar logs (debug)
-        if: always()
-        run: |
-          echo "=== backend.log ==="
-          cat backend.log || true
-          echo "=== worker.log ==="
-          cat worker.log || true
-          echo "=== frontend.log ==="
-          cat frontend.log || true
