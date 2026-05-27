@@ -38,9 +38,8 @@ jobs:
         run: |
           cd tests
           npm ci
-          # npm install --save-dev wait-on @playwright/test
-          # node ./node_modules/playwright/cli.js install --with-deps
-          npm playwright install --with-deps # prueba
+          npm install --save-dev wait-on @playwright/test
+          node ./node_modules/playwright/cli.js install --with-deps
 
       - name: 7. Lanzar Backend y Worker en Segundo Plano
         run: |
