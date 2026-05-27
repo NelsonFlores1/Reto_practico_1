@@ -12,9 +12,7 @@ export default defineConfig({
   ],
   webServer: { // para evitar el error de que el frontend no se levanta
     command: 'npm run dev -- --host 0.0.0.0 --port 5173',
-    // url: 'http://127.0.0.1:5173',
     url: 'http://localhost:5173',
-    // reuseExistingServer: !process.env.CI,
     reuseExistingServer: true,
     cwd: '../frontend',
     timeout: 120000,
