@@ -1,9 +1,7 @@
-name: Lite Thinking QA TestOps Pipeline
+name: Reto 1 - Lite Thinking QA TestOps Pipeline
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
     branches: [ main ]
 
 jobs:
@@ -40,14 +38,17 @@ jobs:
         run: |
           cd tests
           npm ci
-          npm install --save-dev wait-on @playwright/test
-          node ./node_modules/playwright/cli.js install --with-deps
+          # npm install --save-dev wait-on @playwright/test
+          # node ./node_modules/playwright/cli.js install --with-deps
+          npm playwright install --with-deps # prueba
 
       - name: 7. Lanzar Backend y Worker en Segundo Plano
         run: |
           cd backend
-          nohup node server.js > ../backend.log 2>&1 &
-          nohup node worker.js > ../worker.log 2>&1 &
+          # nohup node server.js > ../backend.log 2>&1 &
+          # nohup node worker.js > ../worker.log 2>&1 &
+          node server.js & #prueba
+          node worker.js & #prueba
 
       - name: 8. Esperar Backend listo
         run: |
