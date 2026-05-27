@@ -54,25 +54,12 @@ jobs:
           cd tests
           npx wait-on tcp:127.0.0.1:3000 --timeout 120000
 
-      # - name: 9. Lanzar Frontend en Segundo Plano
-      #   run: |
-      #     cd frontend
-      #     nohup npm run dev -- --host 0.0.0.0 --port 5173 > ../frontend.log 2>&1 &
-      #     sleep 5
-      #     ps -ef | grep -E "vite|node" || true
-      #     cat ../frontend.log || true
-
-      # - name: 10. Esperar Frontend listo
-      #   run: |
-      #     cd tests
-      #     npx wait-on tcp:127.0.0.1:5173 --timeout 120000
-
-      - name: 11. Ejecutar Script de prueba en modo Headless
+      - name: 9. Ejecutar Script de prueba en modo Headless
         run: |
           cd tests
           node ./node_modules/playwright/cli.js test ./registro-async.spec.js
 
-      - name: Subir reporte Playwright
+      - name: 10. Subir reporte Playwright
         if: always() #failure()
         uses: actions/upload-artifact@v4
         with:
