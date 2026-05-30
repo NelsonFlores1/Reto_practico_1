@@ -44,17 +44,16 @@ jobs:
       - name: 7. Lanzar Backend y Worker en Segundo Plano
         run: |
           cd backend
-          # nohup node server.js > ../backend.log 2>&1 &
-          # nohup node worker.js > ../worker.log 2>&1 &
-          node server.js & #prueba
-          node worker.js & #prueba
+          node server.js &
+          node worker.js &
 
       - name: 8. Esperar Backend listo
         run: |
           cd tests
-          npx wait-on tcp:127.0.0.1:3000 --timeout 120000
+          # npx wait-on tcp:127.0.0.1:3000 --timeout 120000
+          npx wait-on tcp:http://localhost:3000 --timeout 120000
 
-      - name: 9. Ejecutar Script de prueba en modo Headless
+      - name: 9. Ejecutar Script de prueba 3 veces consecutivas en modo Headless
         run: |
           cd tests
           node ./node_modules/playwright/cli.js test ./registro-async.spec.js --repeat-each=3 --workers=1
