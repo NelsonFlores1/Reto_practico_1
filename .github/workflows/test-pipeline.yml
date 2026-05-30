@@ -50,8 +50,7 @@ jobs:
       - name: 8. Esperar Backend listo
         run: |
           cd tests
-          # npx wait-on tcp:127.0.0.1:3000 --timeout 120000
-          npx wait-on tcp:http://localhost:3000 --timeout 120000
+          npx wait-on tcp:127.0.0.1:3000 --timeout 120000
 
       - name: 9. Ejecutar Script de prueba 3 veces consecutivas en modo Headless
         run: |
