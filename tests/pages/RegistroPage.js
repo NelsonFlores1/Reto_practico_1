@@ -36,7 +36,7 @@ export class RegistroPage {
         return await this.estadoLocator.innerText();
     }
 
-    async verificarEstadoAprobado(timeoutMs = 10_000) {
-    await expect(this.estadoLocator).toHaveText("Estado: APROBADO", { timeout: timeoutMs });
+    async verificarEstadoUsiarioCreadoExitosamente(timeoutMs = 10_000) {
+    await expect(this.estadoLocator).toHaveText("Estado: Usuario Creado Exitosamente", { timeout: timeoutMs });
     }
 }

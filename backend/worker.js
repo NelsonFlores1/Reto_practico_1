@@ -22,11 +22,11 @@ function resolveSimulation(simulationProfile) {
 
   switch (profile) {
     case 'FAST_5':
-      return { delayMs: 5000, finalStatus: 'APROBADO', bucket: 'FAST_5' };
+      return { delayMs: 5000, finalStatus: 'Usuario Creado Exitosamente', bucket: 'FAST_5' };
     case 'FAST_10':
-      return { delayMs: 10000, finalStatus: 'APROBADO', bucket: 'FAST_10' };
+      return { delayMs: 10000, finalStatus: 'Usuario Creado Exitosamente', bucket: 'FAST_10' };
     case 'FAST_15':
-      return { delayMs: 15000, finalStatus: 'APROBADO', bucket: 'FAST_15' };
+      return { delayMs: 15000, finalStatus: 'Usuario Creado Exitosamente', bucket: 'FAST_15' };
     case 'SLOW_TIMEOUT':
       return {
         delayMs: randomBetween(40000, 60000),
@@ -40,7 +40,7 @@ function resolveSimulation(simulationProfile) {
       if (isFast) {
         return {
           delayMs: randomBetween(5000, 20000),
-          finalStatus: 'APROBADO',
+          finalStatus: 'Usuario Creado Exitosamente',
           bucket: 'RANDOM_FAST'
         };
       }
@@ -64,7 +64,8 @@ function clampSpeedFactor(value) {
 async function subscribeWhenTopicAvailable() {
   while (true) {
     try {
-      await consumer.subscribe({ topic: 'transferencias-creadas', fromBeginning: false });
+      // await consumer.subscribe({ topic: 'transferencias-creadas', fromBeginning: false });
+      await consumer.subscribe({ topic: 'registro-usuarios', fromBeginning: false });
       return;
     } catch (error) {
       if (error && (error.type === 'UNKNOWN_TOPIC_OR_PARTITION' || error.code === 3)) {
@@ -81,7 +82,7 @@ async function runWorker() {
   await consumer.connect();
   // El consumidor se suscribe al casillero específico de transferencias creadas
   await subscribeWhenTopicAvailable();
-  console.log(" Escuchando eventos en el tópico 'transferencias-creadas'...");
+  console.log(" Escuchando eventos en el tópico 'registro-usuarios'...");
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {

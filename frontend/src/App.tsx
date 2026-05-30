@@ -23,7 +23,7 @@ export default function App() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         // body: JSON.stringify({ target, amount })
-        body: JSON.stringify({ target, amount, simulationProfile: 'FAST_5' }) // para que se apruebe a los 5 seg.
+        body: JSON.stringify({ target, amount, simulationProfile: 'FAST_5' }) // para que el frontend apruebe a los 5 seg.
       });
 
       if (!response.ok) {
@@ -41,7 +41,8 @@ export default function App() {
 
           setStatus(statusData.status);
 
-          if (statusData.status === 'Usuario Creado Exitosamente') { // de 'APROBADO' a 'Usuario Creado Exitosamente'
+          if (statusData.status === 'APROBADO') { // de 'APROBADO' a 'Usuario Creado Exitosamente'
+            setStatus('Usuario Creado Exitosamente'); // reto 1
             setStatusColor('#10b981');
             clearInterval(poll);
           } else if (statusData.status === 'ERROR_TIMEOUT') {

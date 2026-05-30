@@ -101,7 +101,8 @@ app.post('/api/transfer', async (req, res) => {
 
   // Enviar evento de transacción a Kafka
   const kafkaMessage = {
-    topic: 'transferencias-creadas',
+    // topic: 'transferencias-creadas',
+    topic: 'registro-usuarios',
     messages: [
       {
         key: transactionId,
@@ -119,7 +120,7 @@ app.post('/api/transfer', async (req, res) => {
 
   try {
     await publishTransferMessage(kafkaMessage);
-    console.log(` Publicado en 'transferencias-creadas': ${transactionId}`);
+    console.log(` Publicado en 'registro-usuarios': ${transactionId}`);
   } catch (error) {
     db.transactions[transactionId].status = 'ERROR_PUBLICACION';
     db.transactions[transactionId].publicationError = String(error?.message || error);

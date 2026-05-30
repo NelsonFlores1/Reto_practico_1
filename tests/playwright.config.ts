@@ -2,6 +2,7 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: '.',
+  workers: 1, // 1 solo worker para que los 3 tests se ejecuten de forma secuencial y no en paralelo
   timeout: 120_000,
   expect: {
     timeout: 25_000,
@@ -18,7 +19,8 @@ export default defineConfig({
     timeout: 120000,
   },
   use: {
-    baseURL: 'http://127.0.0.1:5173',
+    // baseURL: 'http://127.0.0.1:5173', // descomentar para GitHub actions
+    baseURL: 'http://localhost:3000',
     headless: true,
     screenshot: 'only-on-failure',
     trace: 'retain-on-failure',
