@@ -58,7 +58,7 @@ jobs:
           node ./node_modules/playwright/cli.js test ./registro-async.spec.js --repeat-each=3 --workers=1
 
       - name: 10. Subir reporte Playwright
-        if: always() #failure()
+        if: #failure()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
