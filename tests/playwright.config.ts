@@ -19,7 +19,6 @@ export default defineConfig({
     timeout: 120000,
   },
   use: {
-    // baseURL: 'http://127.0.0.1:5173', // descomentar para GitHub actions
     baseURL: 'http://localhost:3000',
     headless: true,
     screenshot: 'only-on-failure',

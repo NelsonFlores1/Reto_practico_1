@@ -16,7 +16,7 @@ jobs:
       - name: 2. Configurar Entorno Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: 3. Levantar Infraestructura de Kafka (Docker)
         run: |
@@ -57,7 +57,7 @@ jobs:
       - name: 9. Ejecutar Script de prueba en modo Headless
         run: |
           cd tests
-          node ./node_modules/playwright/cli.js test ./registro-async.spec.js
+          node ./node_modules/playwright/cli.js test ./registro-async.spec.js --repeat-each=3 --workers=1
 
       - name: 10. Subir reporte Playwright
         if: always() #failure()

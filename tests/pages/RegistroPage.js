@@ -5,7 +5,6 @@ export class RegistroPage {
         this.page = page;
         this.cuentaDestinoLocator = page.getByPlaceholder("Cuenta Destino (Ej: 98765)");
         this.montoLocator = page.locator("//input[@type='number']");
-        // this.password = page.locator("");
         this.enviarTransferenciaBotonLocator = page.getByRole('button', { name: "Enviar Transferencia"});
         this.estadoLocator = page.locator("#status-box");
 
@@ -36,7 +35,7 @@ export class RegistroPage {
         return await this.estadoLocator.innerText();
     }
 
-    async verificarEstadoUsiarioCreadoExitosamente(timeoutMs = 10_000) {
-    await expect(this.estadoLocator).toHaveText("Estado: Usuario Creado Exitosamente", { timeout: timeoutMs });
+    async verificarEstadoUsiarioCreadoExitosamente() {
+    await expect(this.estadoLocator).toHaveText("Estado: Usuario Creado Exitosamente", { timeout: 10_000 });
     }
 }
