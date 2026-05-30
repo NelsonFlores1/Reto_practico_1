@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { RegistroPage } from './pages/RegistroPage';
 
-test('Enviar transferencia', async ( { page }) => {
+test('Automatización E2E con Arquitectura Asíncrona (Kafka + Docker)', async ( { page }) => {
     const registroPage = new RegistroPage(page);
 
     await registroPage.irPaginaRegistro('http://localhost:5173/');

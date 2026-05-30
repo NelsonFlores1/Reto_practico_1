@@ -1,4 +1,4 @@
-name: Reto 1 - Lite Thinking QA TestOps Pipeline
+name: Reto 1-A - Automatización E2E con Arquitectura Asíncrona (Kafka + Docker)
 
 on:
   push:
